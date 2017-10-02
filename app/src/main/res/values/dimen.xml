@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--  常用文字大小 命名规范 以正文M为基准 (类似衣服型号)   XS S  M  L  XL XXL XXXL -->
+    <dimen name="text_toupiao_num_size">24sp</dimen><!-- 显眼的文字大小 -->
+    <dimen name="text_common_large_x">19sp</dimen><!-- 顶部文字 -->
+    <dimen name="text_common_large">16sp</dimen><!-- 标题文字 -->
+    <dimen name="text_common">15sp</dimen><!-- 正文 -->
+    <dimen name="text_common_small">14sp</dimen><!-- 辅助文字 -->
+    <dimen name="text_common_small_x">13sp</dimen><!-- 用户名 -->
+    <dimen name="text_common_small_xx">12sp</dimen><!-- 时间 -->
+    <dimen name="text_common_small_most">10sp</dimen><!-- 文字最小 -->
+
+    <dimen name="space_common_large_xx">25dp</dimen><!-- 不常用的大间距 -->
+    <dimen name="space_common_large_xm">22dp</dimen>
+    <dimen name="space_common_large_x">20dp</dimen><!-- 不常用的大间距 -->
+    <dimen name="space_common_large">15dp</dimen><!-- 最常用的大间距 -->
+    <dimen name="space_common">10dp</dimen><!-- 最常用的手机基准间距 -->
+    <dimen name="space_common_mid">5dp</dimen><!-- 较常用的手机基准间距 -->
+    <dimen name="space_common_small">3dp</dimen><!-- 最常用的小间距 -->
+    <dimen name="space_common_small_x">2dp</dimen><!-- 最小间距 -->
+    <dimen name="line_height">0.5dp</dimen><!-- 通用分割线的高度or宽度 -->
+
+    <dimen name="dialog_btn_height">40dp</dimen>
+</resources>

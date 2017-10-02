@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?><!--<SurfaceView xmlns:android="http://schemas.android.com/apk/res/android"--><!--android:id="@+id/screen_share_re_surface_view"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--/>-->
+<TextView  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_open_screen"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:text="在数据接收到之前初始化解码器"
+    android:textColor="@color/colorAccent"
+    />

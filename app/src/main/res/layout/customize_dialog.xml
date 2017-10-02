@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?><!--android:background="@color/common_light_black_transparent"--><!--xmlns:tools="http://schemas.android.com/tools"-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/duihuakuang">
+    <!--android:background="@android:color/white"-->
+
+    <ImageView
+        android:id="@+id/dialog_new_img"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:contentDescription="@null"
+        android:layout_centerHorizontal="true"
+        android:src="@mipmap/ic_launcher_round" />
+        <!--android:scaleType="centerCrop"-->
+
+    <TextView
+        android:id="@+id/dialog_new_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/dialog_new_img"
+        android:gravity="center"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:lineSpacingExtra="10dp"
+        android:textSize="17sp"
+        android:textColor="#333333"
+        tools:text="Games of Thrones, LOL."
+        />
+    <!--lineSpacingExtra 行间距-->
+    <View
+        android:id="@+id/custom_top_line"
+        android:layout_width="match_parent"
+        android:layout_height="0.3dp"
+        android:layout_below="@id/dialog_new_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="3dp"
+        android:background="#dddddd" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/custom_top_line"
+        android:paddingEnd="3dp"
+        android:paddingStart="3dp"
+        android:layout_marginBottom="3dp">
+
+        <TextView
+            android:id="@+id/dialog_new_cancle"
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical|center_horizontal"
+            android:padding="3dp"
+            android:textStyle="bold"
+            android:textColor="#666666"
+            android:textSize="16sp"
+            tools:text="@string/cancel"
+            />
+
+        <View
+            android:id="@+id/dialog_new_line"
+            android:layout_width="@dimen/line_height"
+            android:layout_height="wrap_content"
+            android:background="#dddddd" />
+
+        <TextView
+            android:id="@+id/dialog_new_confirm"
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="3dp"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@color/colorPrimaryDark"
+            tools:text="@string/confirm"
+            />
+    </LinearLayout>
+</RelativeLayout>
+

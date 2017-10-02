@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Demo</string>
+    <string name="confirm">确认</string>
+    <string name="cancel">取消</string>
+    <string name="open_share">打开屏幕共享</string>
+    <string name="close_share">关闭屏幕共享</string>
+    <string name="edit_hint">接收方的ip地址</string>
+
+
+</resources>
