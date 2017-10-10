@@ -60,12 +60,12 @@ public class ScreenReceiveActivity extends AppCompatActivity implements SurfaceH
         initUdp();
     }
     private static final int FRAME_MAX_NUMBER = 40964;
-    private byte[] testBytes = new byte[FRAME_MAX_NUMBER];
+    private byte[] frameBytes = new byte[FRAME_MAX_NUMBER];
     private void initUdp() {
         try {
             mDatagramSocket = new DatagramSocket(2333);
 //            dp = new DatagramPacket(bytes, bytes.length);
-            final DatagramPacket dp = new DatagramPacket(testBytes, testBytes.length);
+            final DatagramPacket dp = new DatagramPacket(frameBytes, frameBytes.length);
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -100,30 +100,21 @@ public class ScreenReceiveActivity extends AppCompatActivity implements SurfaceH
     }
 
     public void onFrame(byte[] buf) {
-//        Log.e(TAG, "缓存数据:" + ConfigUtil.mDecodeBuffers.size());
-//        if(ConfigUtil.mDecodeBuffers.size() != 0){
-//            buf = ConfigUtil.mDecodeBuffers.poll();
-//        }
         if (buf == null)
             return;
         int length = buf.length;
-//        Log.e(TAG, "length" + length + "  类型" + ByteUtil.checkDataType(buf[4]));
-//        Log.e(TAG,  " 空指针?... " + (mediaCodec==null));
         ByteBuffer[] inputBuffers = mediaCodec.getInputBuffers();//拿到输入缓冲区,用于传送数据进行编码
         //返回一个填充了有效数据的input buffer的索引，如果没有可用的buffer则返回-1.当timeoutUs==0时，该方法立即返回；当timeoutUs<0时，无限期地等待一个可用的input buffer;当timeoutUs>0时，至多等待timeoutUs微妙
-//        int inputBufferIndex;
-//        if(isCache)
 //        int inputBufferIndex = mediaCodec.dequeueInputBuffer(1);// =>0时,至多等待x微妙   如果发送源快速滑动比如放视频, 花屏明显.. ...
        int inputBufferIndex = mediaCodec.dequeueInputBuffer(-1);//    <-1时,无限期地等待一个可用的input buffer  会出现:一直等待导致加载异常, 甚至会吃掉网络通道, 没有任何异常出现...(调试中大部分是因为sps和pps没有写入到解码器, 保证图像信息的参数写入解码器很重要)
-//        Log.e(TAG, "inputBufferIndex" + inputBufferIndex);
         if (inputBufferIndex >= 0) {//当输入缓冲区有效时,就是>=0
             ByteBuffer inputBuffer = inputBuffers[inputBufferIndex];
             inputBuffer.clear();
             inputBuffer.put(buf, 0, length);//往输入缓冲区写入数据,关键点
-            int value = buf[4] & 0x0f;//nalu, 5是I帧, 7是sps 8是pps.
-            if (value == 7)
-                mediaCodec.queueInputBuffer(inputBufferIndex, 0, length, mCount * 30, MediaCodec.BUFFER_FLAG_CODEC_CONFIG);//将缓冲区入队
-            else
+//            int value = buf[4] & 0x0f;//nalu, 5是I帧, 7是sps 8是pps.
+//            if (value == 7)//如果不能保证第一帧写入的是sps和pps， 可以用这种方式等待sps和pps发送到之后写入解码器
+//                mediaCodec.queueInputBuffer(inputBufferIndex, 0, length, mCount * 30, MediaCodec.BUFFER_FLAG_CODEC_CONFIG);//更新sps和pps
+//            else
                 mediaCodec.queueInputBuffer(inputBufferIndex, 0, length, mCount * 30, 0);//将缓冲区入队
             mCount++;
         }
@@ -170,6 +161,7 @@ public class ScreenReceiveActivity extends AppCompatActivity implements SurfaceH
 //        [0, 0, 0, 1, 103, 66, 0, 41, -115, -115, 64, 40, 2, -35, 0, -16, -120, 70, -96, 0, 0, 0, 1, 104, -54, 67, -56]
         //初始化编码器
         final MediaFormat mediaformat = MediaFormat.createVideoFormat("video/avc", width, height);
+        //这里可以写死SPS和PPS
 //        byte[] header_sps = {0, 0, 0, 1, 103, 66, 0, 42, (byte) 149, (byte) 168, 30, 0, (byte) 137, (byte) 249, 102, (byte) 224, 32, 32, 32, 64};
 //        byte[] header_pps = {0, 0, 0, 1, 104, (byte) 206, 60, (byte) 128, 0, 0, 0, 1, 6, (byte) 229, 1, (byte) 151, (byte) 128};
 //        mediaformat.setByteBuffer("csd-0", ByteBuffer.wrap(header_sps));
@@ -209,17 +201,17 @@ public class ScreenReceiveActivity extends AppCompatActivity implements SurfaceH
 //                    byte[] header_pps = {0, 0, 0, 1, 104, (byte) 206, 60, (byte) 128, 0, 0, 0, 1, 6, (byte) 229, 1, (byte) 151, (byte) 128};
 //                    mediaformat.setByteBuffer("csd-0", ByteBuffer.wrap(header_sps));
 //                    mediaformat.setByteBuffer("csd-1", ByteBuffer.wrap(header_pps));
-//指定解码后的帧格式
+//          指定解码后的帧格式
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 //            mediaFormat.setInteger(MediaFormat.KEY_FRAME_RATE, MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Flexible);//解码器将编码的帧解码为这种指定的格式,YUV420Flexible是几乎所有解码器都支持的
 //        }
 //        //设置码率，通常码率越高，视频越清晰，但是对应的视频也越大，这个值我默认设置成了2000000，也就是通常所说的2M，这已经不低了，如果你不想录制这么清晰的，你可以设置成500000，也就是500k
 //        mediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, bitrate);
-//        //设置帧率，通常这个值越高，视频会显得越流畅，一般默认设置成30，最低可以设置成24，不要低于这个值，低于24会明显卡顿
+//        //设置帧率
 //        mediaFormat.setInteger(MediaFormat.KEY_FRAME_RATE, framerate);
 //        //COLOR_FormatSurface这里表明数据将是一个graphicbuffer元数据
 //        mediaFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar);
 //        //IFRAME_INTERVAL是指的帧间隔，这是个很有意思的值，它指的是，关键帧的间隔时间。通常情况下，你设置成多少问题都不大。
 //        //比如你设置成10，那就是10秒一个关键帧。但是，如果你有需求要做视频的预览，那你最好设置成1
 //        //因为如果你设置成10，那你会发现，10秒内的预览都是一个截图
-//        mediaFormat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 1);
+//        mediaFormat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 1);//这个参数在很多手机上无效，特别是6.0以上的

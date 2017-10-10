@@ -1,1 +1,1 @@
-include ':app', ':ScreenRceiveDemo'
+include ':app', ':ScreenReceiveDemo'
