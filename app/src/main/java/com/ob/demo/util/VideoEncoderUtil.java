@@ -87,7 +87,6 @@ public class VideoEncoderUtil {
                     mDatagramSocket.bind(new InetSocketAddress(6666));
                 }
             } catch (SocketException e) {
-                Log.e("pds", "SocketException:"+e.toString());
                 e.printStackTrace();
             }
 //            new TestThread().start();
@@ -125,7 +124,6 @@ public class VideoEncoderUtil {
             Message message = new Message();
             message.obj = data;
             threadHandler.sendMessage(message);
-//            Log.e("pds", "发送视频长度:" + data.length);
         }
 
         private void release() {
@@ -193,19 +191,16 @@ public class VideoEncoderUtil {
             mCodec.setCallback(new MediaCodec.Callback() {
                 @Override
                 public void onInputBufferAvailable(@NonNull MediaCodec codec, int index) {
-                    Log.e("pds", "onInputBufferAvailable:" + index);
                 }
 
                 @Override
                 public void onOutputBufferAvailable(@NonNull MediaCodec codec, int index, @NonNull MediaCodec.BufferInfo info) {
-                    Log.e("pds", "onOutputBufferAvailable:" + index);
                     if (index > -1) {
                         ByteBuffer outputBuffer = codec.getOutputBuffer(index);
                         byte[] data = new byte[info.size];
                         assert outputBuffer != null;
                         outputBuffer.get(data);
                         sendData(data);
-//                        Log.e("pds", "发送的数据" + Arrays.toString(data));
                         codec.releaseOutputBuffer(index, false);
                     }
                     if (System.currentTimeMillis() - timeStamp >= secondFrame) {//5秒后，设置请求关键帧的参数

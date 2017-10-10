@@ -1,8 +1,5 @@
 package com.ob.demo.util;
 
-/**
- * Created by pengs on 2017/9/20.
- */
 
 public class NetworkUtil {
 

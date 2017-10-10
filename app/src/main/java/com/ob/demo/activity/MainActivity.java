@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         projectionManager = (MediaProjectionManager) getSystemService(MEDIA_PROJECTION_SERVICE);
 
         main_demo_edit = (EditText) findViewById(R.id.main_demo_edit);
-        main_demo_edit.setText("172.16.91.140");
+        main_demo_edit.setText("192.168.31.193");
         main_demo_click_txt = (TextView) findViewById(R.id.main_demo_click_txt);
 
         main_demo_click_txt.setOnClickListener(new View.OnClickListener() {

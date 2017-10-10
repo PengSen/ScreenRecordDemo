@@ -2,11 +2,6 @@ package com.ob.demo.util;
 
 import java.util.Arrays;
 
-/**
- * Created by pengs on 2017/9/3.
- *
- */
-
 public class ArrayUtil {
 
     /**

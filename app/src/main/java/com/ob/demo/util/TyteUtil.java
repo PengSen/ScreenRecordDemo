@@ -1,9 +1,5 @@
 package com.ob.demo.util;
 
-/**
- * Created by pengs on 2017/9/2.
- */
-
 public class TyteUtil {
 
     //byte 数组与 int 的相互转换

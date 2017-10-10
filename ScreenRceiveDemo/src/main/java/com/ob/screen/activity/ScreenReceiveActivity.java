@@ -59,11 +59,8 @@ public class ScreenReceiveActivity extends AppCompatActivity implements SurfaceH
 
         initUdp();
     }
-//    private byte[] bytes = new byte[2053];
-//    private static final int FRAME_MAX_NUMBER = 40960;
     private static final int FRAME_MAX_NUMBER = 40964;
     private byte[] testBytes = new byte[FRAME_MAX_NUMBER];
-//    private byte[] frame = new byte[0];
     private void initUdp() {
         try {
             mDatagramSocket = new DatagramSocket(2333);
@@ -92,8 +89,8 @@ public class ScreenReceiveActivity extends AppCompatActivity implements SurfaceH
                         Log.e(TAG, frameLenth+ " 喂的数据: "+ Arrays.toString(frame));
                         onFrame(frame);
                     }
-//                    Log.e(TAG, "....:结束");
-//                    mDatagramSocket.close();
+                    Log.e(TAG, "....:结束");
+                    mDatagramSocket.close();
                 }
             }).start();
         } catch (Exception e) {
@@ -143,6 +140,7 @@ public class ScreenReceiveActivity extends AppCompatActivity implements SurfaceH
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         Log.e(TAG, "surfaceCreated");
+        getFrameData = true;
         creatMediaCodec(holder);
     }
 
@@ -153,7 +151,12 @@ public class ScreenReceiveActivity extends AppCompatActivity implements SurfaceH
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
+        getFrameData = false;
         Log.e(TAG, "surfaceDestroyed");
+        if(mediaCodec != null) {
+            mediaCodec.stop();
+            mediaCodec = null;
+        }
     }
 
     void creatMediaCodec(SurfaceHolder holder) {
@@ -192,18 +195,12 @@ public class ScreenReceiveActivity extends AppCompatActivity implements SurfaceH
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         Log.e(TAG, "onDestroy");
         mSurfaceHolder.getSurface().release();
         mSurfaceHolder = null;
         surface_view = null;
-        getFrameData = false;
         mDatagramSocket.close();
-        if(mediaCodec != null) {
-            mediaCodec.release();
-            mediaCodec.stop();
-//            mediaCodec = null;
-        }
+        super.onDestroy();
         System.exit(0);
     }
 }
