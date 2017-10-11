@@ -16,9 +16,6 @@ import com.ob.demo.util.NetworkUtil;
 import com.ob.demo.util.ToastUtil;
 import com.ob.demo.util.VideoEncoderUtil;
 
-import java.io.IOException;
-import java.net.DatagramSocket;
-
 public class MainActivity extends AppCompatActivity {
     private static final int ACTIVITY_RESULT_CODE = 110;
     private MediaProjectionManager projectionManager;

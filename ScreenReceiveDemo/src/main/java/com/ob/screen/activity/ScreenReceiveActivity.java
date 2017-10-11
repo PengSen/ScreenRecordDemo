@@ -36,11 +36,8 @@ public class ScreenReceiveActivity extends AppCompatActivity implements SurfaceH
     private SurfaceView surface_view;
     private SurfaceHolder mSurfaceHolder;
     private DatagramSocket mDatagramSocket;
-//    private DatagramPacket dp;
     private boolean getFrameData = true;
-    //    private View rootView;
 
-    //    private Queue<byte[]> mDecodeBuffers;//先进先出的队列
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +51,7 @@ public class ScreenReceiveActivity extends AppCompatActivity implements SurfaceH
         surface_view = (SurfaceView) findViewById(R.id.screen_share_re_surface_view);
         mSurfaceHolder = surface_view.getHolder();
         mSurfaceHolder.setFormat(PixelFormat.RGBX_8888);//优化花屏
-        //    android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" // 花屏可以考虑设置这个样式的acticity
+        //    android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" // 花屏可以考虑设置这个样式的acticity，不过尝试了效果有限~
         mSurfaceHolder.addCallback(this);
 
         initUdp();
@@ -64,7 +61,6 @@ public class ScreenReceiveActivity extends AppCompatActivity implements SurfaceH
     private void initUdp() {
         try {
             mDatagramSocket = new DatagramSocket(2333);
-//            dp = new DatagramPacket(bytes, bytes.length);
             final DatagramPacket dp = new DatagramPacket(frameBytes, frameBytes.length);
             new Thread(new Runnable() {
                 @Override
@@ -116,7 +112,7 @@ public class ScreenReceiveActivity extends AppCompatActivity implements SurfaceH
 //                mediaCodec.queueInputBuffer(inputBufferIndex, 0, length, mCount * 30, MediaCodec.BUFFER_FLAG_CODEC_CONFIG);//更新sps和pps
 //            else
                 mediaCodec.queueInputBuffer(inputBufferIndex, 0, length, mCount * 30, 0);//将缓冲区入队
-            mCount++;
+            mCount++;//用于queueInputBuffer presentationTimeUs 此缓冲区的显示时间戳（以微秒为单位），通常是这个缓冲区应该呈现的媒体时间
         }
 
         MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
@@ -158,10 +154,9 @@ public class ScreenReceiveActivity extends AppCompatActivity implements SurfaceH
             Log.e(TAG, "通过多媒体格式名创建一个可用的解码器" + e.toString());
             e.printStackTrace();
         }
-//        [0, 0, 0, 1, 103, 66, 0, 41, -115, -115, 64, 40, 2, -35, 0, -16, -120, 70, -96, 0, 0, 0, 1, 104, -54, 67, -56]
         //初始化编码器
         final MediaFormat mediaformat = MediaFormat.createVideoFormat("video/avc", width, height);
-        //这里可以写死SPS和PPS
+        //这里可以尝试写死SPS和PPS，部分机型上的解码器可以正常工作。
 //        byte[] header_sps = {0, 0, 0, 1, 103, 66, 0, 42, (byte) 149, (byte) 168, 30, 0, (byte) 137, (byte) 249, 102, (byte) 224, 32, 32, 32, 64};
 //        byte[] header_pps = {0, 0, 0, 1, 104, (byte) 206, 60, (byte) 128, 0, 0, 0, 1, 6, (byte) 229, 1, (byte) 151, (byte) 128};
 //        mediaformat.setByteBuffer("csd-0", ByteBuffer.wrap(header_sps));

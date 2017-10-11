@@ -40,7 +40,7 @@ public class VideoEncoderUtil {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private void onSurfaceCreated(Surface surface, int mWidth, int mHeight) {
+    private void onSurfaceBind(Surface surface, int mWidth, int mHeight) {
         virtualDisplay = mediaProjection.createVirtualDisplay("-display",
                 mWidth, mHeight, 1, DisplayManager.VIRTUAL_DISPLAY_FLAG_PUBLIC,
                 surface, null, null);//将屏幕数据与surface进行关联
@@ -112,12 +112,10 @@ public class VideoEncoderUtil {
                     int frameLength = dataFrame.length;
                     byte[] lengthByte = TyteUtil.intToByteArray(frameLength);
                     byte[] concat = ArrayUtil.concat(lengthByte, dataFrame);
-                    Log.e("pds", concat.length+"长度数组:" + Arrays.toString(concat));
                     try {
                         DatagramPacket dp = new DatagramPacket(concat, concat.length, InetAddress.getByName(ip), 2333);
                         mDatagramSocket.send(dp);
                     } catch (IOException e) {
-                        Log.e("pds", "IOException:"+e.toString());
                         e.printStackTrace();
                     }
                 }
@@ -148,7 +146,7 @@ public class VideoEncoderUtil {
                     MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface);
             format.setInteger(MediaFormat.KEY_BIT_RATE, VIDEO_BITRATE);//编码器需要, 解码器可选
             format.setInteger(MediaFormat.KEY_FRAME_RATE, VIDEO_FRAME_PER_SECOND);
-            format.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, VIDEO_I_FRAME_INTERVAL);//帧间隔  这个参数在很多手机上无效, 第二帧关键帧过了之后全是P帧。 不过可以用其它方法，方法具体忘记出处了抱歉... 全局搜关键字GOP
+            format.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, VIDEO_I_FRAME_INTERVAL);//帧间隔  这个参数在很多手机上无效, 第二帧关键帧过了之后全是P帧。 GOP实现还有其它方法，全局搜关键字
 
             try {
                 mCodec = MediaCodec.createEncoderByType(MIME_TYPE);
@@ -191,7 +189,7 @@ public class VideoEncoderUtil {
             //创建关联的输入surface
             mSurface = mCodec.createInputSurface();
             mCodec.start();
-            onSurfaceCreated(mSurface, mWidth, mHeight);
+            onSurfaceBind(mSurface, mWidth, mHeight);
             return true;
         }
 
